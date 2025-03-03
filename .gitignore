@@ -169,3 +169,37 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# Ignore MATLAB files and folders
+*.asv
+*.mexa64
+*.mexw64
+*.mexmaci64
+*.log
+*.slxc
+*.autosave
+*.bak
+*.mat
+*.fig
+*.mlappinstall
+*.mex
+*.mexw32
+*.sim
+*.mdl
+slprj/
+codegen/
+ctf/
+work/
+
+# Ignore large datasets
+datasets/*
+!datasets/README.md 
+
+# Ignore large or temporal files
+*.hdf5
+*.csv
+*.json
+*.pkl
+*.npy
+
