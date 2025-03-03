@@ -196,6 +196,10 @@ work/
 **/datasets/*
 !datasets/README.md 
 
+# Ignore videos for dataset generation
+**/vids/*
+**/videos/*
+
 # Ignore large or temporal files
 *.hdf5
 *.csv
