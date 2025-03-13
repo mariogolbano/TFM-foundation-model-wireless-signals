@@ -4,9 +4,9 @@ function [signal] = wifiVHT(in_bits, modParams)
 % 1. len: La longitud total de la señal Wifi a generar.
 % 2. in_bits: Una secuencia de bits de entrada a modular. Debe tener 8*APEPLength (32768) bits como máximo.
     
-    cbw = modParams.CBW;
-    MCS = modParams.MCS;
-    coding = modParams.ChannelCoding;
+    cbw = modParams.cbw;
+    MCS = modParams.mcs;
+    coding = modParams.channelCoding;
 
     % 802.11n/ac (OFDM) configuration
     vhtCfg = wlanVHTConfig('ChannelBandwidth', cbw, ...
@@ -58,14 +58,14 @@ function [signal] = wifiVHT(in_bits, modParams)
     signal.sig.imag = imag(sig);
     signal.fs = Fs;
     signal.oversamplingFactor = oversampling;
-    signal.bw = 80e6;
+    signal.cbw = 80e6;
     signal.channelCoding = vhtCfg.ChannelCoding;
     signal.guardInterval = vhtCfg.GuardInterval;
     signal.payload = max_payload_length_bits;
     signal.spaceStreams = vhtCfg.NumSpaceTimeStreams;
     signal.waveformLength = wifi_len;
 
-    signal.MCS = vhtCfg.MCS;
+    signal.mcs = vhtCfg.MCS;
 
 
 

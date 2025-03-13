@@ -35,7 +35,7 @@ function VideoSelectionGUI
     end
     videoTable.Data = videoData;
 
-    % **Botones para Seleccionar/Deseleccionar Todos**
+    % **Botones para Seleccionar/Dvieseleccionar Todos**
     btnSelectAll = uibutton(fig, 'Text', 'Select All', ...
         'Position', [130 540 155 40], ...
         'ButtonPushedFcn', @(btn, event) selectAllVideos(true));
@@ -78,7 +78,8 @@ function VideoSelectionGUI
     % **Botón de Continuar**
     btnNext = uibutton(fig, 'Text', 'Continue', 'Position', [450 30 200 50], ...
         'ButtonPushedFcn', @(btn, event) processSelectedVideos());
-
+    
+    playingVideo = 0;
     % **Función para ver un video cuando se haga clic en "View"**
     function viewVideo(src, event)
         if isempty(event.Indices)
@@ -88,8 +89,9 @@ function VideoSelectionGUI
         col = event.Indices(2);
         
         if col == 3
+            playingVideo = videoPaths(row);
             videoPath = videoPaths(row);
-            playVideoInUI(videoPath);
+            %playVideoInUI(videoPath);
         end
     end
 

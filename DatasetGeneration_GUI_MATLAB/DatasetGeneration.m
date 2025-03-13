@@ -80,6 +80,7 @@ function DatasetGeneration
     btnNext = uibutton(fig, 'Text', 'Continue', 'Position', [450 30 200 50], ...
         'ButtonPushedFcn', @(btn, event) processSelectedVideos());
 
+    currentVideo = 0;
     % **Función para ver un video cuando se haga clic en "View"**
     function viewVideo(src, event)
         if isempty(event.Indices)
@@ -89,6 +90,7 @@ function DatasetGeneration
         col = event.Indices(2);
         
         if col == 3
+            currentVideo = videoPaths(row);
             videoPath = videoPaths(row);
             playVideoInUI(videoPath);
         end
@@ -97,7 +99,7 @@ function DatasetGeneration
     % **Función para reproducir un video en el `uiaxes`**
     function playVideoInUI(videoPath)
         videoObj = VideoReader(videoPath);
-        while hasFrame(videoObj)
+        while hasFrame(videoObj) && strcmp(videoPath, currentVideo)
             frame = readFrame(videoObj);
             imshow(frame, 'Parent', previewAxes);
             pause(1/videoObj.FrameRate);
@@ -120,6 +122,7 @@ function DatasetGeneration
 
     % **Función para procesar los videos seleccionados**
     function processSelectedVideos()
+        currentVideo = 0;
         selectedVideos = videoPaths([videoTable.Data{:, 1}] == 1);
         numSubvideos = numSubvideosField.Value;
         numFramesPerSubvideo = numFramesField.Value;

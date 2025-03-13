@@ -1,6 +1,6 @@
 function [signal] = DSSS_mod(inputBits, modParams)
     
-    dataRate = modParams.DataRate;
+    dataRate = modParams.dataRate;
     % Seleccionar el código de dispersión y la modulación según el data rate
     switch dataRate
         case '1Mbps'  % 1 Mbps - DBPSK con código Barker
@@ -48,7 +48,7 @@ function [signal] = DSSS_mod(inputBits, modParams)
     signal.sig.imag = imag(txWaveform);
     signal.fs = 11e6;
     signal.oversamplingFactor = 1;
-    signal.bw = 20e6;
+    signal.cbw = 20e6;
     signal.payload = length(inputBits);
     signal.waveformLength = length(txWaveform);
 

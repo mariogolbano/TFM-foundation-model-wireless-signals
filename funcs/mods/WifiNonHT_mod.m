@@ -4,7 +4,7 @@ function [signal] = wifiNonHT(in_bits, modParams)
 % 1. len: La longitud total de la señal Wifi a generar.
 % 2. in_bits: Una secuencia de bits de entrada a modular. Debe tener 8*APEPLength (32768) bits como máximo.
     
-    dataRate = modParams.DataRate;
+    dataRate = modParams.dataRate;
     
     % 802.11b/g (DSSS) configuration
     dsssCfg = wlanNonHTConfig('Modulation', 'DSSS', ...
@@ -55,9 +55,9 @@ function [signal] = wifiNonHT(in_bits, modParams)
     signal.sig.imag = imag(sig);
     signal.fs = Fs;
     signal.oversamplingFactor = oversampling;
-    signal.bw = 20e6;
+    signal.cbw = 20e6;
     signal.dataRate = dsssCfg.DataRate;
-    switch dsssCfg.DataRate
+    switch dsssCfg.dataRate
         case '1Mbps'
             signal.modulation = 'DBPSK';
         case '2Mbps'
@@ -70,7 +70,7 @@ function [signal] = wifiNonHT(in_bits, modParams)
     signal.payload = max_payload_length_bits;
     signal.spaceStreams = dsssCfg.NumTransmitAntennas;
     signal.waveformLength = wifi_len;
-    signal.MCS = dsssCfg.MCS;
+    signal.mcs = dsssCfg.MCS;
 
 
 

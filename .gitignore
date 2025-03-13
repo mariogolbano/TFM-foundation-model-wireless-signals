@@ -191,7 +191,7 @@ slprj/
 codegen/
 ctf/
 work/
-
+vids_test
 # Ignore large datasets
 **/datasets/*
 !datasets/README.md 

@@ -8,7 +8,7 @@ function ModulationSelectionGUI(videoBitsMatrix)
     titleLabel = uilabel(fig, ...
         'Text', 'Select how you want to modulate the videos selected:', ...
         'FontSize', 14, 'FontWeight', 'bold', ...
-        'Position', [200 450 500 30]);
+        'Position', [50 450 500 30]);
 
     % **Lista de Modulaciones Disponibles**
     %*************** hay que añadir 5g si eso ****************************%
@@ -24,11 +24,16 @@ function ModulationSelectionGUI(videoBitsMatrix)
         'Position', [280 300 130 50], ...
         'ButtonPushedFcn', @(btn, event) openModulationConfig());
 
+    % **Botón para Importar Configuración desde JSON**
+    btnImport = uibutton(fig, 'Text', 'Import configuration from JSON', ...
+        'Position', [625 430 200 50], ...
+        'ButtonPushedFcn', @(btn, event) importModulationConfig());
+
     % **Lista de Modulaciones Configuradas**
     configuredModulationList = uilistbox(fig, ...
         'Items', {}, ...
         'Position', [520 150 200 250], ...
-        'Multiselect', 'off'); % ✅ Corregido
+        'Multiselect', 'off'); % 
 
     % **Botón para consultar Configuración de Modulaciones Seleccionadas**
     btnEdit = uibutton(fig, 'Text', 'Consult Parameters', ...
@@ -47,7 +52,7 @@ function ModulationSelectionGUI(videoBitsMatrix)
 
     % **Estructura para Almacenar Parámetros**
     modulationParams = struct();
-
+    
     % **Contador para Múltiples Configuraciones**
     modCount = containers.Map(modulations, num2cell(zeros(size(modulations))));
 
@@ -73,9 +78,12 @@ function ModulationSelectionGUI(videoBitsMatrix)
         % Definir parámetros según modulación
         switch modulationType
             case 'OFDM'
-                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 300]);
+                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 335]);
                 uilabel(modFig, 'Text', sprintf('Configure parameters for %s:', modulationType), ...
-                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 310 300 30]);
+                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 345 300 30]);
+
+                uilabel(modFig, 'Text', 'Noise - SNR (dB):', 'Position', [80 310 200 20]);
+                ofdm_noise = uieditfield(modFig, 'numeric', 'Position', [245 310 70 20], 'Value', 50);
 
                 uilabel(modFig, 'Text', 'FFT length:', 'Position', [80 275 200 30]);
                 ofdm_fftlength = uieditfield(modFig, 'numeric', 'Position', [245 275 70 20], 'Value', 64);
@@ -93,7 +101,7 @@ function ModulationSelectionGUI(videoBitsMatrix)
                 ofdm_dc_null = uicheckbox(modFig, ...
                     'Position', [245 135 100 20], ...
                     'Text', '', ...  % No mostrar texto en la checkbox
-                    'Value', true);  % Valor por defecto (marcada)
+                    'Value', false);  % Valor por defecto (marcada)
 
                 uilabel(modFig, 'Text', 'Modulation type:', 'Position', [80 100 200 20]);
                 ofdm_mod = uidropdown(modFig, ...
@@ -102,20 +110,26 @@ function ModulationSelectionGUI(videoBitsMatrix)
                     'Value', 'BPSK');  % 🔹 Valor por defecto
 
             case 'DSSS'
-                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 180]);
+                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 200]);
                 uilabel(modFig, 'Text', sprintf('Configure parameters for %s:', modulationType), ...
-                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 150 300 30]);
+                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 170 300 30]);
 
-                uilabel(modFig, 'Text', 'Data Rate:', 'Position', [80 125 200 20]);
+                uilabel(modFig, 'Text', 'Noise - SNR (dB):', 'Position', [80 135 200 20]);
+                dsss_noise = uieditfield(modFig, 'numeric', 'Position', [245 135 70 20], 'Value', 50);
+
+                uilabel(modFig, 'Text', 'Data Rate:', 'Position', [80 100 200 20]);
                 dsss_datarate = uidropdown(modFig, ...
-                    'Position', [230 125 100 20], ...
+                    'Position', [230 100 100 20], ...
                     'Items', {'1Mbps', '2Mbps', '5.5Mbps', '11Mbps'}, ...  
                     'Value', '1Mbps');  % 🔹 Valor por defecto
 
             case 'WifiHESU'
-                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 240]);
+                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 270]);
                 uilabel(modFig, 'Text', sprintf('Configure parameters for %s:', modulationType), ...
-                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 210 300 30]);
+                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 240 300 30]);
+
+                uilabel(modFig, 'Text', 'Noise - SNR (dB):', 'Position', [80 205 200 20]);
+                hesu_noise = uieditfield(modFig, 'numeric', 'Position', [245 205 70 20], 'Value', 50);
                 
                 uilabel(modFig, 'Text', 'Channel Bandwidth:', 'Position', [80 170 200 20]);
                 hesu_cbw = uidropdown(modFig, ...
@@ -136,21 +150,27 @@ function ModulationSelectionGUI(videoBitsMatrix)
                     'Value', 'LDPC');  % 🔹 Valor por defecto
 
             case 'WifiNonHT'
-                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 180]);
+                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 200]);
                 uilabel(modFig, 'Text', sprintf('Configure parameters for %s:', modulationType), ...
-                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 150 300 30]);
+                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 170 300 30]);
 
-                uilabel(modFig, 'Text', 'Data Rate:', 'Position', [80 125 200 20]);
+                uilabel(modFig, 'Text', 'Noise - SNR (dB):', 'Position', [80 135 200 20]);
+                nonht_noise = uieditfield(modFig, 'numeric', 'Position', [245 135 70 20], 'Value', 50);
+
+                uilabel(modFig, 'Text', 'Data Rate:', 'Position', [80 100 200 20]);
                 nonht_datarate = uidropdown(modFig, ...
-                    'Position', [230 125 100 20], ...
+                    'Position', [230 100 100 20], ...
                     'Items', {'1Mbps', '2Mbps', '5.5Mbps', '11Mbps'}, ...  
                     'Value', '1Mbps');  % 🔹 Valor por defecto
 
             case 'WifiVHT'
-                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 240]);
+                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 270]);
                 uilabel(modFig, 'Text', sprintf('Configure parameters for %s:', modulationType), ...
-                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 210 300 30]);
-                
+                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 240 300 30]);
+
+                uilabel(modFig, 'Text', 'Noise - SNR (dB):', 'Position', [80 205 200 20]);
+                vht_noise = uieditfield(modFig, 'numeric', 'Position', [245 205 70 20], 'Value', 50);
+
                 uilabel(modFig, 'Text', 'Channel Bandwidth:', 'Position', [80 170 200 20]);
                 vht_cbw = uidropdown(modFig, ...
                     'Position', [230 170 150 20], ...
@@ -170,13 +190,23 @@ function ModulationSelectionGUI(videoBitsMatrix)
                     'Value', 'LDPC');  % 🔹 Valor por defecto
 
             case 'Bluetooth'
-                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 150]);
-                uilabel(modFig, 'Text', sprintf('No parameters to configure for %s', modulationType), ...
-                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 120 300 30]);
+                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 180]);
+                uilabel(modFig, 'Text', sprintf('No specific parameters to configure for %s', modulationType), ...
+                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 150 300 30]);
+
+                uilabel(modFig, 'Text', 'Noise - SNR (dB):', 'Position', [80 115 200 20]);
+                bt_noise = uieditfield(modFig, 'numeric', 'Position', [245 115 70 20], 'Value', 50);
 
             case '5G'
-                uilabel(modFig, 'Text', 'Chip Rate (MHz):', 'Position', [50 200 200 30]);
-                chipRate = uieditfield(modFig, 'numeric', 'Position', [250 200 100 30], 'Value', 11);
+                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 200]);
+                uilabel(modFig, 'Text', sprintf('Configure parameters for %s:', modulationType), ...
+                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 240 300 170]);
+
+                uilabel(modFig, 'Text', 'Noise - SNR (dB):', 'Position', [80 135 200 20]);
+                noise = uieditfield(modFig, 'numeric', 'Position', [245 135 70 20], 'Value', 50);
+
+                uilabel(modFig, 'Text', 'Chip Rate (MHz):', 'Position', [50 100 200 30]);
+                chipRate = uieditfield(modFig, 'numeric', 'Position', [250 100 100 30], 'Value', 11);
 
         end
 
@@ -190,27 +220,36 @@ function ModulationSelectionGUI(videoBitsMatrix)
             switch modulationType
                 case 'OFDM'
                     params.FFTLength = ofdm_fftlength.Value;
-                    params.CyclicPrefixLength = ofdm_cylicprefix.Value;
-                    params.NumSymbols = ofdm_numsymbs.Value;
-                    params.SubcarrierSpacing = ofdm_scs.Value;
-                    params.InsertDCnull = ofdm_dc_null.Value;
-                    params.Modulation = ofdm_mod.Value;
+                    params.cyclicPrefixLength = ofdm_cylicprefix.Value;
+                    params.numSymbols = ofdm_numsymbs.Value;
+                    params.subcarrierSpacing = ofdm_scs.Value;
+                    params.DCnull = ofdm_dc_null.Value;
+                    params.modulation = ofdm_mod.Value;
+                    params.snr = (ofdm_noise.Value);
 
                 case 'DSSS'
-                    params.DataRate = dsss_datarate.Value;
+                    params.dataRate = dsss_datarate.Value;
+                    params.snr = (dsss_noise.Value);
+
 
                 case 'WifiHESU'
-                    params.CBW = ['CBW' extractBefore(hesu_cbw.Value, ' ')];
-                    params.MCS = str2num(extractBefore(hesu_mcs.Value, ' '));
-                    params.ChannelCoding = hesu_coding.Value;
-               
+                    params.cbw = ['CBW' extractBefore(hesu_cbw.Value, ' ')];
+                    params.mcs = str2num(extractBefore(hesu_mcs.Value, ' '));
+                    params.channelCoding = hesu_coding.Value;
+                    params.snr = (hesu_noise.Value);
+
                 case 'WifiNonHT'
-                    params.DataRate = nonht_datarate.Value;
+                    params.dataRate = nonht_datarate.Value;
+                    params.snr = (nonht_noise.Value);
                 
                 case 'WifiVHT'
-                    params.CBW = ['CBW' extractBefore(vht_cbw.Value, ' ')];
-                    params.MCS = str2num(extractBefore(vht_mcs.Value, ' '));
-                    params.ChannelCoding = vht_coding.Value;
+                    params.cbw = ['CBW' extractBefore(vht_cbw.Value, ' ')];
+                    params.mcs = str2num(extractBefore(vht_mcs.Value, ' '));
+                    params.channelCoding = vht_coding.Value;
+                    params.snr = (vht_noise.Value);
+
+                case 'Bluetooth'
+                    params.snr = (bt_noise.Value);
 
             end
             
@@ -283,12 +322,13 @@ function ModulationSelectionGUI(videoBitsMatrix)
 
     % **Función para Mostrar Parámetros (Solo Lectura)**
     function showModulationParams(modKey)
-        modFig = uifigure('Name', sprintf('%s Parameters (Read-Only)', modKey), ...
-                          'Position', [200 200 400 300]);
-
         params = modulationParams.(modKey);
         paramFields = fieldnames(params);
-        yPos = 250;
+
+        modFig = uifigure('Name', sprintf('%s Parameters (Read-Only)', modKey), ...
+                          'Position', [200 200 400 ((length(paramFields)+1)*40 + 20)]);
+
+        yPos = (length(paramFields) * 40 + 20);
 
         for i = 1:length(paramFields)
             uilabel(modFig, 'Text', paramFields{i}, 'Position', [50 yPos 150 30]);
@@ -299,6 +339,74 @@ function ModulationSelectionGUI(videoBitsMatrix)
 
         uibutton(modFig, 'Text', 'Close', 'Position', [150 10 100 30], ...
             'ButtonPushedFcn', @(btn, event) close(modFig));
+    end
+
+    % **Función para Importar Configuración desde JSON**
+    function importModulationConfig()
+        [jsonFiles, jsonPath] = uigetfile('*.json', 'Select JSON Config Files', 'MultiSelect', 'on');
+
+        if isequal(jsonFiles, 0)
+            return; % Si el usuario cancela, no hacer nada
+        end
+
+        if ischar(jsonFiles)
+            jsonFiles = {jsonFiles}; % Asegurar formato de celda para múltiples archivos
+        end
+
+        for i = 1:length(jsonFiles)
+            jsonFilePath = fullfile(jsonPath, jsonFiles{i});
+            try
+                % Leer JSON y decodificarlo
+                jsonData = fileread(jsonFilePath);
+                importedParams = jsondecode(jsonData);
+
+                % Extraer el nombre base de la modulación del campo "mod"
+                if isfield(importedParams, 'mod')
+                    modBaseName = extractBefore(importedParams.mod, '_');
+                else
+                    uialert(fig, sprintf('Error: Missing "mod" field in %s', jsonFiles{i}), 'Error');
+                    continue;
+                end
+
+                % Filtrar solo los campos relevantes de la configuración
+                switch modBaseName
+                    case 'OFDM'
+                        configurableFields = {'FFTLength', 'cyclicPrefixLength', 'numSymbols', 'subcarrierSpacing', 'DCnull', 'modulation', 'snr'};
+                    case 'DSSS'
+                        configurableFields = {'dataRate', 'snr'};
+                    case 'WifiHESU'
+                        configurableFields = {'cbw', 'mcs','channelCoding', 'snr'};
+                    case 'WifiNonHT'
+                        configurableFields = {'cbw', 'snr'};
+                    case 'WifiVHT'
+                        configurableFields = {'cbw', 'mcs','channelCoding', 'snr'};
+                    case 'Bluetooth'
+                        configurableFields = {'snr'};
+                end
+                importedFiltered = rmfield(importedParams, setdiff(fieldnames(importedParams), configurableFields));
+
+                % Verificar si ya existe una configuración con los mismos parámetros relevantes
+                existingConfigs = fieldnames(modulationParams);
+                for j = 1:length(existingConfigs)
+                    existingFiltered = rmfield(modulationParams.(existingConfigs{j}), ...
+                                               setdiff(fieldnames(modulationParams.(existingConfigs{j})), configurableFields));
+                    if isequal(existingFiltered, importedFiltered)
+                        uialert(fig, sprintf('Configuration from %s already exists.', jsonFiles{i}), 'Warning');
+                        return;
+                    end
+                end
+
+                % Asignar un índice único
+                modCount(modBaseName) = modCount(modBaseName) + 1;
+                modKey = sprintf('%s_%d', modBaseName, modCount(modBaseName));
+
+                % Guardar la configuración importada en `modulationParams`
+                modulationParams.(modKey) = importedFiltered;
+                updateConfiguredList(modKey);
+            catch
+                uialert(fig, sprintf('Error importing %s. Ensure it is a valid JSON configuration.', jsonFiles{i}), 'Error');
+            end
+        end
     end
 
     % **Función para Continuar con la Modulación**

@@ -4,11 +4,11 @@ function [signal] = OFDM_mod(in_bits, modParams)
 
     % Extraer parámetros desde modParams
     fft_length = modParams.FFTLength;
-    cyclicprefix = modParams.CyclicPrefixLength;
-    numsymbs = modParams.NumSymbols;
-    scs = modParams.SubcarrierSpacing;
-    insertDCnull = modParams.InsertDCnull;
-    modulation_type = modParams.Modulation; % Ejemplo: 'BPSK', 'QPSK', '16QAM', etc.
+    cyclicprefix = modParams.cyclicPrefixLength;
+    numsymbs = modParams.numSymbols;
+    scs = modParams.subcarrierSpacing;
+    insertDCnull = modParams.DCnull;
+    modulation_type = modParams.modulation; % Ejemplo: 'BPSK', 'QPSK', '16QAM', etc.
 
     % Determinar el índice de modulación
     switch modulation_type
@@ -109,12 +109,12 @@ function [signal] = OFDM_mod(in_bits, modParams)
     % Almacenar en la estructura de salida
     signal.mod = ['OFDM_' modulation_type];
     signal.type = 'OFDM';
-    signal.OFDM = modulation;
+    signal.modulation = modulation;
     signal.sig.real = real(sig);
     signal.sig.imag = imag(sig);
     signal.fs = Fs;
     signal.oversamplingFactor = ofdmMod.OversamplingFactor;
-    signal.bw = 20e6;
+    signal.cbw = 20e6;
     signal.payload = len_bits;
     signal.waveformLength = wf_len;
     signal.cyclicPrefixLength = ofdmMod.CyclicPrefixLength;

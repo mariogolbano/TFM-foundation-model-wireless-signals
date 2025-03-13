@@ -66,6 +66,8 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
         for i = 1:length(modulations)
             modKey = modulations{i};
             modParams = modulationParams.(modKey);
+            
+            snrValue = modulationParams.(modKey).snr;
 
             % **Barra de Progreso Individual por Modulación**
             modProgress = waitbar(0, sprintf('Processing %s...', modKey));
@@ -85,8 +87,13 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
                 funcModulation = strcat(baseModulation, '_mod');
                 
                 signal = feval(funcModulation, double(videoBits), modParams); % Llamar función de modulación
-                                % Reshape waveform para almacenar en HDF5
-                waveform_reshaped = cat(2, signal.sig.real, signal.sig.imag);
+
+                % Add noise (AWGN)
+                noisyWaveform_real = awgn(signal.sig.real, snrValue);
+                noisyWaveform_imag = awgn(signal.sig.imag, snrValue);
+
+                % Reshape waveform para almacenar en HDF5
+                waveform_reshaped = cat(2, noisyWaveform_real, noisyWaveform_imag);
                 waveforms = cat(3, waveforms, waveform_reshaped);
                 bits_signals = [bits_signals, videoBits];
 
@@ -97,6 +104,7 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
 
                     if ~isfile(mat_filepath)
                         signal = rmfield(signal, 'sig');
+                        signal.snr = snrValue;
                         save(mat_filepath, '-struct', 'signal');
 
                         % Guardar en un archivo JSON
@@ -122,6 +130,7 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
             end
 
             % Guardar en HDF5
+
             saveSignalToHDF5(filename, waveforms);
             saveBitsToHDF5(filenameBits, bits_signals);
                         
