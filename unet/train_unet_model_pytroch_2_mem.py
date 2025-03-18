@@ -140,6 +140,7 @@ def train_unet_pytorch(hdf5_file, output_dir, prev_model_path=None, batch_size=1
     print(f"🔹 Memory Freed (Reserved): {mem_before_reserved - mem_after_reserved:.2f} MB\n")
 
     print(f"Training complete. Best model saved at {best_model_path}")
+    return best_model_path, best_val_loss
 
 # Función para guardar métricas
 def save_training_metrics(train_losses, val_losses, output_dir):
@@ -169,6 +170,9 @@ if __name__ == "__main__":
         sys.exit(1)
 
     previous_model_path = None  
+    global_best_model = None
+    global_best_val_loss = float('inf')
+
 
     for idx, hdf5_file in enumerate(hdf5_files):
         dataset_name = os.path.splitext(os.path.basename(hdf5_file))[0]
@@ -177,8 +181,14 @@ if __name__ == "__main__":
 
         print(f"Training model for dataset: {dataset_name}")
 
-        train_unet_pytorch(hdf5_file, model_output_dir, previous_model_path)
-        previous_model_path = os.path.join(model_output_dir, "unet_best_model.pth")
+        best_model_path, best_val_loss = train_unet_pytorch(hdf5_file, model_output_dir, previous_model_path)
+
+        # Guardar el mejor modelo global
+        if best_val_loss < global_best_val_loss:
+            global_best_val_loss = best_val_loss
+            global_best_model = best_model_path
+
+        previous_model_path = best_model_path
 
         metrics_file = os.path.join(model_output_dir, "training_metrics.json")
         if os.path.exists(metrics_file):
@@ -190,3 +200,9 @@ if __name__ == "__main__":
             print(f"No metrics file found in {metrics_file}, skipping plotting.")
 
         print(f"Finished training for {dataset_name}\n")
+
+    if global_best_model:
+        final_model_path = os.path.join(output_dir, "final_best_model.pth")
+        torch.save(torch.load(global_best_model), final_model_path)
+        print(f"Final best model saved at {final_model_path}, from dataset {os.path.basename(global_best_model)}")
+
