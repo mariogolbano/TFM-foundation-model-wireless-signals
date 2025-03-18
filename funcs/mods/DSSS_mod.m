@@ -51,5 +51,7 @@ function [signal] = DSSS_mod(inputBits, modParams)
     signal.cbw = 20e6;
     signal.payload = length(inputBits);
     signal.waveformLength = length(txWaveform);
+    signal.lengthBits = length(inputBits);
+
 
 end

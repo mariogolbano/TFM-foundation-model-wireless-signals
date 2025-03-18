@@ -1,4 +1,7 @@
 function VideoSelectionGUI
+    addpath('funcs');
+    addpath('../funcs');
+    addpath('funcs/mods');
     % Crear la interfaz principal
     fig = uifigure('Name', 'Select Videos to Modulate', 'Position', [100 100 1100 650]);
 

@@ -58,6 +58,7 @@ function [signal] = bt1(varargin)
     else
         niter = ceil(length(in_bits)/max_payload_length_bits);
         sig = [];
+        lengthBits = length(in_bits);
         in_bits = [in_bits; zeros(niter*max_payload_length_bits - length(in_bits), 1)];
         for i = 1:niter
             start_index = (i-1)*max_payload_length_bits + 1;
@@ -98,5 +99,6 @@ function [signal] = bt1(varargin)
             signal.Bluetooth = 'EDR3M';
             signal.modulation = '8-DPSK';
     end
+    signal.lengthBits = lengthBits;
 
 end

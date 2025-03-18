@@ -1,6 +1,7 @@
 function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
-    addpath('funcs');
-    addpath('funcs/mods');
+    addpath(genpath('funcs'));
+    addpath(genpath('../funcs'));
+    addpath(genpath('../funcs/mods'));
 
     % Crear la interfaz principal
     fig = uifigure('Name', 'Modulation Processing', 'Position', [100 100 900 600]);
@@ -18,7 +19,7 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
         'Multiselect', 'off');
 
     % **Nombre de la Carpeta de Almacenamiento**
-    datasetsFolder = 'datasets';
+    datasetsFolder = '../datasets';
     if ~exist(datasetsFolder, 'dir')
         mkdir(datasetsFolder);
     end

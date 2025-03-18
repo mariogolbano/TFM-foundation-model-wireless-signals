@@ -72,6 +72,7 @@ function [signal] = wifiHESU(in_bits, modParams)
 
     signal.mcs = heSUCfg.MCS;
     signal.guardInterval = heSUCfg.GuardInterval;
+    signal.lengthBits = length(in_bits);
 
 
 end

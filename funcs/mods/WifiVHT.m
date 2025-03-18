@@ -66,6 +66,7 @@ function [signal] = wifiVHT(in_bits, modParams)
     signal.waveformLength = wifi_len;
 
     signal.mcs = vhtCfg.MCS;
+    signal.lengthBits = length(in_bits);
 
 
 

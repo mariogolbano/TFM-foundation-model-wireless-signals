@@ -1,5 +1,5 @@
 function DemodulationGUI(datasetFolder, selectedModulation, selectedSignals)
-    addpath('../DatasetGeneration_GUI_MATLAB/funcs/demods/')
+    addpath('../funcs/demods/')
     % Crear la ventana principal
     fig = uifigure('Name', 'Demodulation and Visualization', 'Position', [100, 100, 800, 600]);
 

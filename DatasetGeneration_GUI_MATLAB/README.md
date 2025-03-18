@@ -67,7 +67,7 @@ Once modulation is applied:
 The signal generation process relies on **video-based encoding**, where video frames are modulated into wireless signals. However, the videos used during development **are not included in this repository** due to storage limitations.
 
 A set of preprocessed videos can be accessed through the following link:  
-**[Google Drive Link](https://www.dropbox.com/scl/fo/oe5826lwqbzy5dg21n62w/AP6LmSy_lAXD71f7fUFJI2w?rlkey=ruj1vdcior4fqzy53mrns815e&st=5tnztbbz&dl=0)** 
+  **[Google Drive Link]** (https://drive.google.com/drive/folders/1hblNcyulgV4LZlzw680qYcca3sfdL-1I?usp=drive_link)
 All these videos have been downloeaded from **[Vecteezy](https://www.vecteezy.com/free-videos)**   
 
 Alternatively, users can use **any other video or set of videos** in **MP4 format**. The `processVideo.m` function handles preprocessing, ensuring compatibility with different video sources.

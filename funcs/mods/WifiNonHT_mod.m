@@ -71,6 +71,7 @@ function [signal] = wifiNonHT(in_bits, modParams)
     signal.spaceStreams = dsssCfg.NumTransmitAntennas;
     signal.waveformLength = wifi_len;
     signal.mcs = dsssCfg.MCS;
+    signal.lengthBits = length(in_bits);
 
 
 

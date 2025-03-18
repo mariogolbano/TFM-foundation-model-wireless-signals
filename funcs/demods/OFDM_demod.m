@@ -13,12 +13,12 @@ function [demodulatedBits] = OFDM_demod(receivedSignal, modParams)
     wf_len = modParams.waveformLength; % 8000 muestras por bloque
     bits_length = modParams.lengthBits;
     
-    if isequal(modParams.OFDM, 'BPSK')
+    if isequal(modParams.modulation, 'BPSK')
         M = 2;
-    elseif isequal(modParams.OFDM, 'QPSK')
+    elseif isequal(modParams.modulation, 'QPSK')
         M = 4;
     else
-        M = str2double(extractBefore(modParams.OFDM, 'Q'));
+        M = str2double(extractBefore(modParams.modulation, 'Q'));
     end
 
     % Crear el objeto OFDM demodulador con los mismos parámetros

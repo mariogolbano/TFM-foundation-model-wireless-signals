@@ -123,5 +123,6 @@ function [signal] = OFDM_mod(in_bits, modParams)
     signal.numSymbols = ofdmMod.NumSymbols;
     signal.subcarrierSpacing = scs;
     signal.DCnull = ofdmMod.InsertDCNull;
+    signal.lengthBits = length(in_bits);
 
 end
