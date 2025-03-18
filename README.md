@@ -16,48 +16,55 @@ The repository is divided into three main directories, each containing a dedicat
 
 ```
 /
-│── DatasetGeneration_GUI_MATLAB/            # MATLAB-based signal generation system
-│   ├── DatasetGeneration.m                  # Main GUI script for dataset creation
-│   ├── ModulationSelectionGUI.m             # GUI for selecting modulation types
-│   ├── VideoSelectionGUI.m                  # GUI for video-based signal encoding
-│   └── README.md                            # Documentation for signal generation
+│── DatasetGeneration_GUI_MATLAB/                 # MATLAB-based signal generation system
+│   ├── DatasetGeneration.m                       # Main GUI script for dataset creation
+│   ├── ModulationSelectionGUI.m                  # GUI for selecting modulation types
+│   ├── VideoSelectionGUI.m                       # GUI for video-based signal encoding
+│   └── README.md                                 # Documentation for signal generation
 │
-│── DatasetVisualization_Python/             # Jupyter Notebooks for dataset analysis
-│   ├── dataset_visualization.ipynb          # Main notebook for dataset exploration
-│   ├── aux_funcs_vis.py                     # Helper functions for visualization
-│   ├── README.md                            # Documentation for dataset visualization
+│── DatasetVisualization_Python/                  # Jupyter Notebooks for dataset analysis
+│   ├── dataset_visualization.ipynb               # Main notebook for dataset exploration
+│   ├── aux_funcs_vis.py                          # Helper functions for visualization
+│   ├── README.md                                 # Documentation for dataset visualization
 │
+|── DatasetDemodulationVisualization_GUI_MATLAB/  # Main directory for demodulation and visualization GUIs
+|   |── DemodulateDatasets.m                      # Main script: selects dataset folder and modulation type
+|   |── DemodulationGUI.m                         # Core demodulation script: extracts bit sequences from modulated signals
+|   |── DemodulationOrVisualizationGUI.m          # GUI to choose between demodulation or signal visualization
+|   |── SelectSignalsGUI.m                        # GUI for selecting specific signals within the dataset for processing
+|   |── VisualizeSignalsGUI.m                     # GUI for visualizing signals (waveforms, spectrograms, constellations)
+|
 │── unet/
-|   │── dataset_utils/                       # Helper functions for dataset management
-|   │── notebook/                            # Jupyter Notebooks for training analysis
-|   │── outputs/                             # Directory for saving training logs and results
-|   │── reference_models/                    # Pretrained models (handled via Git LFS)
-|   │── rfcutils/                            # Additional utilities for model evaluation
-|   │── src/                                 # Source code for model training and inference
-|   │── README.md                            # Documentation for this module
-|   │── rfsionna_env.yml                     # Environment file for Sionna-based experiments
-|   │── rftorch_env.yml                      # Environment file for PyTorch-based experiments
-|   │── sampletest_evaluationscript.py       # Script to evaluate trained models on test datasets
-|   │── sampletest_generatetestmixtures.sh   # Shell script to generate test mixtures
-|   │── sampletest_testmixture_generator.py  # Script to generate test datasets
-|   │── sampletest_tf_unet_inference.py      # TensorFlow-based U-Net inference script
-|   │── sampletest_torch_wavenet_inference.py # PyTorch-based WaveNet inference script
-|   │── sampletrain_gendataset_script.sh     # Shell script for generating training datasets
-|   │── supervised_config.yml                # Configuration file for training parameters
-|   │── train_torchwavenet.py                # PyTorch training script for WaveNet
-|   │── train_unet_model_pytroch_2_mem.py    # Optimized PyTorch training script for UNet1D
-|   │── unet_model_pytorch_2.py              # UNet1D model implementation
+|   │── dataset_utils/                            # Helper functions for dataset management
+|   │── notebook/                                 # Jupyter Notebooks for training analysis
+|   │── outputs/                                  # Directory for saving training logs and results
+|   │── reference_models/                         # Pretrained models (handled via Git LFS)
+|   │── rfcutils/                                 # Additional utilities for model evaluation
+|   │── src/                                      # Source code for model training and inference
+|   │── README.md                                 # Documentation for this module
+|   │── rfsionna_env.yml                          # Environment file for Sionna-based experiments
+|   │── rftorch_env.yml                           # Environment file for PyTorch-based experiments
+|   │── sampletest_evaluationscript.py            # Script to evaluate trained models on test datasets
+|   │── sampletest_generatetestmixtures.sh        # Shell script to generate test mixtures
+|   │── sampletest_testmixture_generator.py       # Script to generate test datasets
+|   │── sampletest_tf_unet_inference.py           # TensorFlow-based U-Net inference script
+|   │── sampletest_torch_wavenet_inference.py     # PyTorch-based WaveNet inference script
+|   │── sampletrain_gendataset_script.sh          # Shell script for generating training datasets
+|   │── supervised_config.yml                     # Configuration file for training parameters
+|   │── train_torchwavenet.py                     # PyTorch training script for WaveNet
+|   │── train_unet_model_pytroch_2_mem.py         # Optimized PyTorch training script for UNet1D
+|   │── unet_model_pytorch_2.py                   # UNet1D model implementation
 │
 |── funcs/
-│   |── demods/                              # Functions for demodulation
-│   |── mods/                                # Functions for modulation
-│   |── plots/                               # Functions for signal visualization
-│   |── bitsToVideoFrames.m                  # Converts binary bit sequences into video frames
-│   |── cck_chips.m                          # Implements the CCK (Complementary Code Keying) chip sequences
-│   |── loadDatasetSignals.m                 # Loads signal data from an HDF5 dataset
-│   |── processVideo.m                       # Processes video files for signal encoding
+│   |── demods/                                   # Functions for demodulation
+│   |── mods/                                     # Functions for modulation
+│   |── plots/                                    # Functions for signal visualization
+│   |── bitsToVideoFrames.m                       # Converts binary bit sequences into video frames
+│   |── cck_chips.m                               # Implements the CCK (Complementary Code Keying) chip sequences
+│   |── loadDatasetSignals.m                      # Loads signal data from an HDF5 dataset
+│   |── processVideo.m                            # Processes video files for signal encoding
 |
-└── README.md                                # General documentation (this file)
+└── README.md                                     # General documentation (this file)
 ```
 
 ---
@@ -107,7 +114,7 @@ For more details, refer to **dataset_visualization/README.md**.
 
 ---
 
-# **3. Advanced Signal Visualization and Demodulation (MATLAB)**  
+## **3. Advanced Signal Visualization and Demodulation (MATLAB)**  
 The **DatasetDemodulationVisualization_GUI_MATLAB** directory contains **MATLAB tools** for **advanced demodulation, visualization, and signal analysis**. These tools allow for a deeper inspection of modulated signals, impairments, and recovery performance.
 
 ---
