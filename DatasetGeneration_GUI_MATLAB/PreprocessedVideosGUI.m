@@ -1,5 +1,5 @@
 function PreprocessedVideosGUI(videoPaths, numSubvideos, numFramesPerSubvideo)
-    addpath('funcs')
+    addpath(genpath('../funcs'));
     
     % Crear la interfaz principal
     fig = uifigure('Name', 'Preprocessed Videos Preview', 'Position', [100 100 1100 600]);

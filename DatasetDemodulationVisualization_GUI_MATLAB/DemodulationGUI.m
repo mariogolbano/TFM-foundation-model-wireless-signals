@@ -1,5 +1,7 @@
 function DemodulationGUI(datasetFolder, selectedModulation, selectedSignals)
     addpath('../funcs/demods/')
+    addpath('../funcs/');
+
     % Crear la ventana principal
     fig = uifigure('Name', 'Demodulation and Visualization', 'Position', [100, 100, 800, 600]);
 

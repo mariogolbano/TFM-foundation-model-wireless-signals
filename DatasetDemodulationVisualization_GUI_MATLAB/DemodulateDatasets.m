@@ -1,5 +1,7 @@
 function DemodulateDatasets
     addpath('../DatasetGeneration_GUI_MATLAB/funcs/');
+    addpath('../funcs/');
+
     % Crear la ventana principal
     fig = uifigure('Name', 'Load Dataset', 'Position', [100, 100, 600, 500]);
 

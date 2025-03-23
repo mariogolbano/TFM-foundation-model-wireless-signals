@@ -1,7 +1,5 @@
 function DatasetGeneration
-    addpath('funcs');
-    addpath('../funcs');
-    addpath('funcs/mods');
+    addpath(genpath('../funcs'));
     % Crear la interfaz principal
     fig = uifigure('Name', 'Select Videos to Modulate', 'Position', [100 100 1100 650]);
 

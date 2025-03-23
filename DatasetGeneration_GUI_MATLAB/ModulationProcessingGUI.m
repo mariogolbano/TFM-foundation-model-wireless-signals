@@ -1,7 +1,5 @@
 function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
-    addpath(genpath('funcs'));
     addpath(genpath('../funcs'));
-    addpath(genpath('../funcs/mods'));
 
     % Crear la interfaz principal
     fig = uifigure('Name', 'Modulation Processing', 'Position', [100 100 900 600]);
@@ -60,7 +58,7 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
         currentStep = 0;
 
         % **Barra de Progreso Global**
-        globalProgress = waitbar(0, 'Overall Progress');
+        globalProgress = waitbar(0, 'Overall Progress', 'Position',[400, 350, 300,50]);
 
         % Procesar cada modulación
         modulations = fieldnames(modulationParams);
@@ -71,7 +69,7 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
             snrValue = modulationParams.(modKey).snr;
 
             % **Barra de Progreso Individual por Modulación**
-            modProgress = waitbar(0, sprintf('Processing %s...', modKey));
+            modProgress = waitbar(0, sprintf('Processing %s...', modKey), 'Position', [400,250,300,50]);
 
             % Inicializar archivo HDF5
             filename = fullfile(datasetPath, [modKey, '.h5']);
@@ -131,7 +129,6 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
             end
 
             % Guardar en HDF5
-
             saveSignalToHDF5(filename, waveforms);
             saveBitsToHDF5(filenameBits, bits_signals);
                         
@@ -149,6 +146,7 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
     
     % **Guardar Señales en HDF5**
     function saveSignalToHDF5(filename, waveforms)
+        waveforms = single(waveforms);
         % Abrir o crear el archivo HDF5 para las señales
         file_id = H5F.create(filename, 'H5F_ACC_TRUNC', 'H5P_DEFAULT', 'H5P_DEFAULT');
         
@@ -160,10 +158,10 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
         dataspace_id = H5S.create_simple(ndims(waveforms), fliplr(dims), []);
         
         % Crear el dataset con tipo de dato double
-        dataset_id = H5D.create(file_id, 'dataset', 'H5T_NATIVE_DOUBLE', dataspace_id, 'H5P_DEFAULT');
+        dataset_id = H5D.create(file_id, 'dataset', 'H5T_NATIVE_FLOAT', dataspace_id, 'H5P_DEFAULT');
         
         % Escribir los datos en el dataset
-        H5D.write(dataset_id, 'H5T_NATIVE_DOUBLE', 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', waveforms);
+        H5D.write(dataset_id, 'H5T_NATIVE_FLOAT', 'H5S_ALL', 'H5S_ALL', 'H5P_DEFAULT', waveforms);
         
         % Añadir un atributo para el tamaño del frame
         attr_id = H5A.create(dataset_id, 'FrameSize', 'H5T_NATIVE_DOUBLE', ...
