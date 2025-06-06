@@ -12,7 +12,7 @@ function ModulationSelectionGUI(videoBitsMatrix)
 
     % **Lista de Modulaciones Disponibles**
     %*************** hay que añadir 5g si eso ****************************%
-    modulations = {'OFDM', 'DSSS', 'WifiHESU', 'WifiNonHT', 'WifiVHT', 'Bluetooth'};
+    modulations = {'PSK', 'QAM', 'OFDM', 'DSSS', 'WifiVHT', 'WifiNonHT', 'WifiHESU', 'Bluetooth', '5G (NR)'};
     
     modulationList = uilistbox(fig, ...
         'Items', modulations, ...
@@ -74,7 +74,7 @@ function ModulationSelectionGUI(videoBitsMatrix)
     % **Función para Configurar Parámetros de Modulación**
     function configureModulationParams(modulationType)
         % Crear nueva ventana de configuración
-
+        
         % Definir parámetros según modulación
         switch modulationType
             case 'OFDM'
@@ -189,6 +189,41 @@ function ModulationSelectionGUI(videoBitsMatrix)
                     'Items', {'LDPC', 'BCC'}, ...  
                     'Value', 'LDPC');  % 🔹 Valor por defecto
 
+
+            case 'PSK'
+                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 250]);
+                uilabel(modFig, 'Text', sprintf('Configure parameters for %s:', modulationType), ...
+                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 220 300 30]);
+
+                uilabel(modFig, 'Text', 'Noise - SNR (dB):', 'Position', [80 185 200 20]);
+                psk_noise = uieditfield(modFig, 'numeric', 'Position', [245 185 70 20], 'Value', 50);
+
+                uilabel(modFig, 'Text', 'Modulation Order:', 'Position', [80 150 200 20]);
+                psk_mod = uidropdown(modFig, ...
+                    'Position', [230 150 100 20], ...
+                    'Items', {'2 (BPSK)', '4 (QPSK)', '8 (8PSK)'}, ...  
+                    'Value', '2 (BPSK)');  
+
+                uilabel(modFig, 'Text', 'Output Symbol Rate:', 'Position', [80 115 200 20]);
+                psk_sym_rate = uieditfield(modFig, 'numeric', 'Position', [245 115 70 20], 'Value', 1000);
+
+            case 'QAM'
+                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 250]);
+                uilabel(modFig, 'Text', sprintf('Configure parameters for %s:', modulationType), ...
+                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 220 300 30]);
+
+                uilabel(modFig, 'Text', 'Noise - SNR (dB):', 'Position', [80 185 200 20]);
+                qam_noise = uieditfield(modFig, 'numeric', 'Position', [245 185 70 20], 'Value', 50);
+
+                uilabel(modFig, 'Text', 'Modulation Order:', 'Position', [80 150 200 20]);
+                qam_mod = uidropdown(modFig, ...
+                    'Position', [230 150 100 20], ...
+                    'Items', {'2', '4', '8', '16', '32', '64', '128', '256', '512', '1024', '2048', '4096'}, ...  
+                    'Value', '2');  
+
+                uilabel(modFig, 'Text', 'Output Symbol Rate:', 'Position', [80 115 200 20]);
+                qam_sym_rate = uieditfield(modFig, 'numeric', 'Position', [245 115 70 20], 'Value', 1000);
+
             case 'Bluetooth'
                 modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 180]);
                 uilabel(modFig, 'Text', sprintf('No specific parameters to configure for %s', modulationType), ...
@@ -207,7 +242,6 @@ function ModulationSelectionGUI(videoBitsMatrix)
 
                 uilabel(modFig, 'Text', 'Chip Rate (MHz):', 'Position', [50 100 200 30]);
                 chipRate = uieditfield(modFig, 'numeric', 'Position', [250 100 100 30], 'Value', 11);
-
         end
 
         % Botón para Guardar Configuración
@@ -250,6 +284,16 @@ function ModulationSelectionGUI(videoBitsMatrix)
 
                 case 'Bluetooth'
                     params.snr = (bt_noise.Value);
+                
+                case 'PSK'
+                    params.modOrder = psk_mod.Value;
+                    params.symRate = psk_sym_rate.Value;
+                    params.snr = (psk_noise.Value);
+                
+                case 'QAM'
+                    params.modOrder = qam_mod.Value;
+                    params.symRate = qam_sym_rate.Value;
+                    params.snr = (qam_noise.Value);
 
             end
             
@@ -274,7 +318,6 @@ function ModulationSelectionGUI(videoBitsMatrix)
         end
     end
 
-    % **Actualizar Lista de Modulaciones Configuradas**
     % **Actualizar Lista de Modulaciones Configuradas**
     function updateConfiguredList(modKey)
         configuredItems = configuredModulationList.Items;
@@ -382,6 +425,12 @@ function ModulationSelectionGUI(videoBitsMatrix)
                         configurableFields = {'cbw', 'mcs','channelCoding', 'snr'};
                     case 'Bluetooth'
                         configurableFields = {'snr'};
+                    case 'PSK'
+                        configurableFields = {'modOrder', 'symbolRate', 'snr'};
+                    case 'QAM'
+                        configurableFields = {'modOrder', 'symbolRate', 'snr'};
+
+
                 end
                 importedFiltered = rmfield(importedParams, setdiff(fieldnames(importedParams), configurableFields));
 

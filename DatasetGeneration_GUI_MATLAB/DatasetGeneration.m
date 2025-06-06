@@ -1,10 +1,10 @@
 function DatasetGeneration
     addpath(genpath('../funcs'));
     % Crear la interfaz principal
-    fig = uifigure('Name', 'Select Videos to Modulate', 'Position', [100 100 1100 650]);
+    fig = uifigure('Name', 'Select Videos to Modulate', 'Position', [100 80 1100 650]);
 
     % Seleccionar carpeta de videos
-    videoFolder = uigetdir(pwd, 'Select Video Folder');
+    videoFolder = uigetdir(fullfile(pwd, '..', 'vids'), 'Select Video Folder');
     videoFiles = dir(fullfile(videoFolder, '*.mp4')); % Puedes agregar más formatos
 
     numVideos = length(videoFiles);
@@ -33,7 +33,7 @@ function DatasetGeneration
     % Datos de la tabla
     videoData = cell(numVideos, 3);
     for i = 1:numVideos
-        videoData{i, 1} = true;  % Checkbox por defecto activado
+        videoData{i, 1} = false;  % Checkbox por defecto activado
         videoData{i, 2} = videoFiles(i).name; % Nombre del video
         videoData{i, 3} = 'View'; % Botón de vista previa
     end
@@ -47,6 +47,15 @@ function DatasetGeneration
     btnDeselectAll = uibutton(fig, 'Text', 'Unselect All', ...
         'Position', [330 540 155 40], ...
         'ButtonPushedFcn', @(btn, event) selectAllVideos(false));
+
+    % **Número de videos aleatorios a seleccionar**
+    uilabel(fig, 'Text', 'Number of random videos:', 'Position', [100, 610, 200, 25]);
+    numRandomVideosField = uieditfield(fig, 'numeric', 'Position', [270, 610, 40, 25], 'Value', 5, 'Limits', [1 Inf]);
+
+    % **Botón para seleccionar videos aleatorios**
+    btnSelectRandom = uibutton(fig, 'Text', 'Select Random Videos', ...
+        'Position', [330, 600, 160, 40], ...
+        'ButtonPushedFcn', @(btn, event) selectRandomVideos());
 
     % **Contador de videos seleccionados**
     selectedCountLabel = uilabel(fig, ...
@@ -141,5 +150,23 @@ function DatasetGeneration
             close(fig);
             PreprocessedVideosGUI(selectedVideos, numSubvideos, numFramesPerSubvideo); % Pasa a la siguiente pantalla con los nuevos parámetros
         end
+    end
+
+    % **Función para seleccionar aleatoriamente los videos**
+    function selectRandomVideos()
+        numRandomVideos = numRandomVideosField.Value;
+        
+        % Verificar que el número de videos aleatorios no sea mayor que el total de videos
+        if numRandomVideos > numVideos
+            uialert(fig, sprintf('Error: Cannot select more than %d videos.', numVideos), 'Error');
+            return;
+        end
+
+        % Seleccionar aleatoriamente los videos
+        randomSelection = randperm(numVideos, numRandomVideos);  % Seleccionar índices aleatorios
+        for idx = 1:numRandomVideos
+            videoTable.Data{randomSelection(idx), 1} = true;  % Marcar como seleccionado
+        end
+        updateSelectedCount();  % Actualizar el contador
     end
 end

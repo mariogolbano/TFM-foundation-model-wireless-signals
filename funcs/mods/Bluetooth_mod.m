@@ -28,12 +28,12 @@ function [signal] = bt1(varargin)
     if length(varargin) == 1 && isscalar(varargin{1})
         % Modo: Generar señal Bluetooth con longitud especificada (len)
         len = varargin{1};
-        fprintf('Mode: Generating a bluetooth signal of %d samples\n', len)
+        %fprintf('Mode: Generating a bluetooth signal of %d samples\n', len)
         n_iters = ceil(len / bt_len);
         use_input_bits = false;
     elseif isvector(varargin{1})
         % Modo: Modula la señal Bluetooth con los bits de entrada (in_bits)
-        fprintf('Mode: Modulating the input bits into a bluetooth signal\n')
+        %fprintf('Mode: Modulating the input bits into a bluetooth signal\n')
 
         in_bits = varargin{1};
         use_input_bits = true;

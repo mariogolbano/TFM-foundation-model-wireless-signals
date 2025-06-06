@@ -25,6 +25,7 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
     todayDate = datestr(now, 'yyyy-mm-dd');
     datasetIndex = 1;
     
+    % Verificar si la carpeta existe, sino incrementamos el índice
     while exist(fullfile(datasetsFolder, sprintf('dataset_%s_%d', todayDate, datasetIndex)), 'dir')
         datasetIndex = datasetIndex + 1;
     end
@@ -47,11 +48,10 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
 
         % Verificar si la carpeta ya existe
         if exist(datasetPath, 'dir')
-            uialert(fig, 'The selected dataset folder already exists. Please choose another name.', 'Error');
-            return;
+            disp('Folder exists, adding files to it');
+        else
+            mkdir(datasetPath); % Crear la carpeta si no existe
         end
-
-        mkdir(datasetPath); % Crear la carpeta si no existe
 
         % Total de iteraciones para progreso global
         totalSteps = length(fieldnames(modulationParams)) * numel(videoBitsMatrix);
@@ -75,6 +75,10 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
             filename = fullfile(datasetPath, [modKey, '.h5']);
             filenameBits = fullfile(datasetPath, ['bits_', modKey, '.h5']);
             
+            % **Añadir sufijo a los archivos HDF5 si ya existen**
+            filename = addFileSuffix(filename);
+            filenameBits = addFileSuffix(filenameBits);
+
             waveforms = [];
             bits_signals = [];
 
@@ -101,18 +105,20 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
                     mat_filepath = fullfile(datasetPath, [modKey, '.mat']);
                     json_filepath = fullfile(datasetPath, [modKey, '.json']);
 
-                    if ~isfile(mat_filepath)
-                        signal = rmfield(signal, 'sig');
-                        signal.snr = snrValue;
-                        save(mat_filepath, '-struct', 'signal');
+                    % Si el archivo ya existe, agregar sufijo numérico (_1, _2, ...)
+                    mat_filepath = addFileSuffix(mat_filepath);
+                    json_filepath = addFileSuffix(json_filepath);
 
-                        % Guardar en un archivo JSON
-                        jsonData = jsonencode(signal);
-                        fid = fopen(json_filepath, 'w');
-                        fwrite(fid, jsonData, 'char');
-                        fclose(fid);
+                    % Guardar en archivo mat
+                    signal = rmfield(signal, 'sig');
+                    signal.snr = snrValue;
+                    save(mat_filepath, '-struct', 'signal');
 
-                    end
+                    % Guardar en archivo JSON
+                    jsonData = jsonencode(signal);
+                    fid = fopen(json_filepath, 'w');
+                    fwrite(fid, jsonData, 'char');
+                    fclose(fid);
                 end
 
                 % Actualizar barra de progreso individual
@@ -207,5 +213,16 @@ function ModulationProcessingGUI(videoBitsMatrix, modulationParams)
         H5F.close(file_id);
         
         disp(['HDF5 file created: ', filename]);
+    end
+
+    % Función para añadir sufijos a los archivos si ya existen
+    function newFilePath = addFileSuffix(filePath)
+        count = 1;
+        newFilePath = filePath;
+        while isfile(newFilePath)
+            [~, name, ext] = fileparts(filePath);
+            newFilePath = fullfile(fileparts(filePath), sprintf('%s_%d%s', name, count, ext));
+            count = count + 1;
+        end
     end
 end

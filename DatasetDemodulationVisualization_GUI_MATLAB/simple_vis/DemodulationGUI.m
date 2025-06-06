@@ -111,7 +111,7 @@ function DemodulationGUI(datasetFolder, selectedModulation, selectedSignals)
     % Función para volver a `DemodulationOrVisualizationGUI`
     function returnToPreviousGUI()
         close(fig); % Cerrar la ventana actual
-        DemodulationOrVisualizationGUI(datasetFolder, selectedModulation, selectedSignals); % Volver a la selección
+        SelectSignalsGUI(datasetFolder, selectedModulation);
     end
 
     % Función para deshabilitar los ejes de los gráficos

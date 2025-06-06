@@ -1,9 +1,9 @@
-function SelectSignalsGUI(datasetFolder, selectedModulation)
+function SelectSignalsGUI(interferenceFolder, inferredFolder, selectedModulation)
     % Crear la ventana principal
     fig = uifigure('Name', 'Select Signals for Demodulation', 'Position', [100, 100, 600, 500]);
 
     % Ruta del dataset seleccionado
-    datasetFile = fullfile(datasetFolder, [selectedModulation, '.h5']);
+    datasetFile = fullfile(interferenceFolder, [selectedModulation, '.h5']);
 
     % Cargar información del dataset
     numAvailableSamples = getNumberOfSamples(datasetFile);
@@ -48,7 +48,7 @@ function SelectSignalsGUI(datasetFolder, selectedModulation)
         % Botón para volver atrás (regresa a `SelectSignalsGUI`)
     
     btnBack = uibutton(fig, 'Text', 'Back', 'Position', [130, 50, 150, 50], ...
-        'ButtonPushedFcn', @(btn, event) returnToDemodulateDatasetsFolder(datasetFolder));
+        'ButtonPushedFcn', @(btn, event) returnToDatasetSelection(interferenceFolder, inferredFolder));
 
     % Función para actualizar los campos de selección de señales
     function updateSelectionFields()
@@ -123,13 +123,13 @@ function SelectSignalsGUI(datasetFolder, selectedModulation)
     
         % Cerrar la ventana actual y abrir la selección de demodulación o visualización
         close(fig);
-        DemodulationOrVisualizationGUI(datasetFolder, selectedModulation, selectedSignals);
+        DemodulationGUI(interferenceFolder, inferredFolder, selectedModulation, selectedSignals);
     end
 
     % Función para volver a `SelectSignalsGUI`
-    function returnToDemodulateDatasetsFolder(datasetFolder)
+    function returnToDatasetSelection(interferenceFolder, inferredFolder)
         close(fig);  % Cerrar esta GUI
-        DemodulateDatasetsFolder(datasetFolder);
+        DatasetSelection(interferenceFolder, inferredFolder);
     end
 
 end

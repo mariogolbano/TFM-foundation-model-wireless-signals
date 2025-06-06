@@ -44,13 +44,7 @@ function [signal] = OFDM_mod(in_bits, modParams)
         'NumTransmitAntennas', 1, ...
         'PilotInputPort', false);
     
-    if ofdmMod.InsertDCNull == false
-        len_bits = 5300 * log2(M);
-    else
-        len_bits = 5200 * log2(M);
-    end
-
-    wf_len = 8000;
+    len_bits = (fft_length - ofdmMod.NumGuardBandCarriers(1) - ofdmMod.NumGuardBandCarriers(2) - insertDCnull) * ofdmMod.NumSymbols * log2(M);
     
     sig = [];
     if length(in_bits) > len_bits
@@ -102,6 +96,11 @@ function [signal] = OFDM_mod(in_bits, modParams)
         % Generar la waveform
         waveform = ofdmMod(dataInput_reshape);
         sig = [sig ; waveform];
+
+        if i==1
+            wf_len = length(waveform);
+        end
+        
     end
     
     Fs = ofdmMod.FFTLength * scs * ofdmMod.OversamplingFactor; % Sample rate en Hz

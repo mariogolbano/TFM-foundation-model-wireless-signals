@@ -192,6 +192,7 @@ codegen/
 ctf/
 work/
 vids_test
+unet
 # Ignore large datasets
 **/datasets/*
 !datasets/README.md 

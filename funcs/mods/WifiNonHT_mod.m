@@ -1,4 +1,4 @@
-function [signal] = wifiNonHT(in_bits, modParams)
+function [signal] = WifiNonHT_mod(in_bits, modParams)
 % Genera una señal Wifi 802.11 ab Non-high Throughput.
 % La función acepta uno de dos parámetros:
 % 1. len: La longitud total de la señal Wifi a generar.

@@ -1,4 +1,4 @@
-function [signal] = wifiHESU(in_bits, modParams)
+function [signal] = WifiHESU_mod(in_bits, modParams)
 % Genera una señal Wifi 802.11 ax High Efficiency SingleUser.
 % La función acepta uno de dos parámetros:
 % 1. len: La longitud total de la señal Wifi a generar.

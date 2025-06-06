@@ -1,93 +1,40 @@
-function DemodulateDatasets
-    addpath('../DatasetGeneration_GUI_MATLAB/funcs/');
-    addpath('../funcs/');
+function DemodulateDatasets()
+    % Pantalla de entrada principal para seleccionar el flujo de visualización
+    addpath(genpath('../funcs'));
 
-    % Crear la ventana principal
-    fig = uifigure('Name', 'Load Dataset', 'Position', [100, 100, 600, 500]);
+    fig = uifigure('Name', 'Select Visualization Type', 'Position', [250, 150, 550, 350]);
 
-    % Seleccionar la carpeta del dataset
-    datasetFolder = uigetdir(pwd, 'Select Dataset Folder');
-    if datasetFolder == 0
-        uialert(fig, 'No folder selected.', 'Error');
-        return;
-    end
+    % Título
+    uilabel(fig, ...
+        'Text', 'How do you want to visualize the signals?', ...
+        'FontSize', 18, 'FontWeight', 'bold', ...
+        'Position', [95, 270, 400, 40]);
 
-    % Obtener lista de modulaciones disponibles
-    datasetFiles = dir(fullfile(datasetFolder, '*.mat'));
-    modulationList = erase({datasetFiles.name}, '.mat'); % Extraer solo los nombres
-    
-    % Agregar el valor por defecto '---'
-    modulationList = ['---', modulationList];
+    % Botón para visualización simple
+    uibutton(fig, ...
+        'Text', ['Demodulated Signal vs Original Bits' newline '(Simple)'], ...
+        'FontSize', 16, ...
+        'Position', [110, 165, 300, 70], ...
+        'ButtonPushedFcn', @(btn, event) openSimpleVisualization());
 
-    % Lista de modulaciones disponibles
-    uilabel(fig, 'Text', 'Select a modulation:', 'Position', [50, 420, 200, 25]);
-    modulationDropdown = uidropdown(fig, ...
-        'Items', modulationList, ...
-        'Position', [200, 420, 250, 25], ...
-        'Value', '---', ... % 🔹 Por defecto, muestra '---'
-        'ValueChangedFcn', @(src, event) loadModulationInfo());
+    % Botón para visualización con inferencia
+    uibutton(fig, ...
+        'Text', ['Inference Signal vs Interference' newline 'vs Original Bits' newline '(Inference)'], ...
+        'FontSize', 16, ...
+        'Position', [110, 60, 300, 80], ...
+        'ButtonPushedFcn', @(btn, event) openInferenceVisualization());
 
-    % Panel para la información de la modulación
-    infoPanel = uipanel(fig, 'Title', 'Modulation Info', 'Position', [50, 150, 500, 250]);
-
-    % Tabla dentro del panel, centrada
-    infoTable = uitable(infoPanel, ...
-        'Position', [0, 0, 500, 230], ...  % 🔹 Centramos la tabla
-        'ColumnName', {'Parameter', 'Value'}, ...
-        'RowName', []);  % 🔹 Quitamos la numeración de la izquierda
-
-    % Botón para continuar
-    btnContinue = uibutton(fig, 'Text', 'Continue', 'Position', [200, 50, 200, 50], ...
-        'ButtonPushedFcn', @(btn, event) continueToSignalSelection());
-
-    % Cargar información del archivo .mat seleccionado
-    function loadModulationInfo()
-        selectedModulation = modulationDropdown.Value;
-
-        % Evitar que se cargue si aún está en '---'
-        if strcmp(selectedModulation, '---')
-            infoTable.Data = {}; % Limpiar la tabla si vuelve a '---'
-            return;
-        end
-
-        matFile = fullfile(datasetFolder, [selectedModulation, '.mat']);
-
-        if isfile(matFile)
-            matData = load(matFile);
-            fieldNames = fieldnames(matData);
-            fieldValues = struct2cell(matData);
-
-            % Convertir valores a cadenas para mostrarlos correctamente
-            for i = 1:length(fieldValues)
-                value = fieldValues{i};
-                if isnumeric(value) || islogical(value)
-                    fieldValues{i} = num2str(value);
-                elseif iscell(value)
-                    fieldValues{i} = strjoin(string(value), ', ');
-                elseif isstruct(value)
-                    fieldValues{i} = '[Structure]';
-                end
-            end
-
-            % Formatear datos para la tabla
-            infoTable.Data = [fieldNames, fieldValues];
-        else
-            uialert(fig, 'The selected modulation has no metadata file.', 'Error');
-        end
-    end
-
-    % Pasar a la siguiente pantalla
-    function continueToSignalSelection()
-        selectedModulation = modulationDropdown.Value;
-
-        % 🔹 Bloquear si no se ha seleccionado una modulación válida
-        if strcmp(selectedModulation, '---')
-            uialert(fig, 'Please select a valid modulation before continuing.', 'Error');
-            return;
-        end
-
-        % Cerrar esta GUI y abrir la siguiente
+    % Función para ir a visualización simple
+    function openSimpleVisualization()
+        addpath("simple_vis\");
         close(fig);
-        SelectSignalsGUI(datasetFolder, selectedModulation);
+        DatasetSelection(); % Redirige al flujo simple
+    end
+
+    % Función para ir a visualización por inferencia
+    function openInferenceVisualization()
+        addpath("inference_vis\");
+        close(fig);
+        FolderSelection(); % Redirige al flujo de inferencia
     end
 end
