@@ -49,7 +49,7 @@ DatasetGeneration
 
 This launches the main GUI, allowing the user to configure dataset parameters.
 
-### **3. Selecting Videos for modulation
+### **3. Selecting Videos for modulation**
 1. Select the folder where the .mp4 videos are located
 2. Videos to modulate into signals must be selected. A pre-view of these videos is available at the GUI.
 3. Videos will be cut into several shorter ones. The number of videos in which divide the original as well as the frames of each sub-video is selected here. 
