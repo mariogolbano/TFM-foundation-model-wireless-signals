@@ -41,7 +41,7 @@ Uses the same input/target signal (e.g., clean only).
 python train_unet_model_pytorch_interference.py /path/to/clean_h5_files /output/dir
 ```
 
-### **2. Denoising Autoencoder **
+### **2. Denoising Autoencoder**
 Trains on (interfered → clean) signal pairs using matched JSON metadata.
 
 ```bash
