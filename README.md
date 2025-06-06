@@ -1,198 +1,182 @@
 # **Foundation Model for Wireless Signal Recovery**
 
 ## **Overview**
-This repository contains the complete pipeline for **wireless signal generation, visualization, and recovery using deep learning**. It integrates three key components:
+This repository contains the complete pipeline for **wireless signal generation, interference simulation, visualization, and recovery using deep learning**. It integrates four key components:
 
-1. **Signal Generation (MATLAB GUI)**: A MATLAB-based graphical interface to generate realistic wireless communication signals, including WiFi, Bluetooth, DSSS, and 5G signals with interference and impairments.
-2. **Dataset Visualization (Python Notebooks)**: A set of Jupyter Notebooks for exploring and analyzing generated datasets, visualizing signals in the time and frequency domains, and comparing interference scenarios.
-3. **Deep Learning Model (UNet1D for Signal Recovery)**: A PyTorch-based **1D U-Net model** designed to recover clean wireless signals from interference and noise, improving signal separation in the radio spectrum.
+1. **Signal Generation (MATLAB GUI)**: A GUI-based system for generating synthetic wireless signals with configurable modulation types and impairments.
+2. **Interference Simulation (Python)**: A script-based pipeline to combine clean and interfering signals into realistic mixed datasets.
+3. **Dataset Visualization and Demodulation (MATLAB & Python)**: Tools for inspecting and demodulating wireless signals, analyzing spectral and temporal characteristics.
+4. **Deep Learning Model (UNet1D in PyTorch)**: A neural network for signal recovery that reconstructs clean signals from noisy or interfered inputs.
 
-This work aims to develop a **foundation model for wireless signal processing**, leveraging deep learning techniques to reconstruct degraded signals and enhance communication performance.
+This work supports the development of a **foundation model for wireless signal processing**, capable of generalizing across diverse modulation schemes and interference scenarios.
 
 ---
 
 ## **Repository Structure**
-The repository is divided into three main directories, each containing a dedicated README file with detailed explanations.
-
 ```
+
 /
-│── DatasetGeneration_GUI_MATLAB/                 # MATLAB-based signal generation system
-│   ├── DatasetGeneration.m                       # Main GUI script for dataset creation
-│   ├── ModulationSelectionGUI.m                  # GUI for selecting modulation types
-│   ├── VideoSelectionGUI.m                       # GUI for video-based signal encoding
-│   └── README.md                                 # Documentation for signal generation
 │
-│── DatasetVisualization_Python/                  # Jupyter Notebooks for dataset analysis
-│   ├── dataset_visualization.ipynb               # Main notebook for dataset exploration
-│   ├── aux_funcs_vis.py                          # Helper functions for visualization
-│   ├── README.md                                 # Documentation for dataset visualization
+├── DatasetGeneration\_GUI\_MATLAB/              # MATLAB GUI for wireless signal generation
+│   ├── DatasetGeneration.m                    # Main script
+│   ├── ModulationSelectionGUI.m               # GUI for selecting modulation types
+│   ├── PreprocessedVideosGUI.m                # GUI for selecting videos for signal content
+│   └── README.md                              # Details on GUI usage
+
+├── InterferenceDatasetGeneration/             # Python scripts for interference creation
+│   ├── generate\_interferences.py              # Main script to mix signals with interference
+│   ├── utils.py                               # Signal processing utilities (length match, merging)
+│   └── README.md                              # Documentation for this module
+
+├── DatasetDemodulationVisualization\_GUI\_MATLAB/   # GUI for demodulation and visualization
+│   ├── DemodulateDatasets.m                   # Entry point for signal demodulation
+│   ├── Multiple GUIs:                         # VisualizeSignalsGUI.m, etc.
+│   └── README.md                              # Full GUI documentation
+
+├── DatasetVisualization\_Python/              # Jupyter Notebook for dataset inspection
+│   ├── Dataset\_Visualization.ipynb           # Notebook for signal exploration
+│   ├── aux\_funcs\_vis.py                      # Helper functions for plotting and loading
+│   └── README.md                             # Visualization instructions
+
+├── unet\_model/                               # PyTorch model for signal recovery
+│   ├── train\_unet\_model\_pytorch\_interf.py    # UNet training with/without interference
+│   ├── unet\_inference\_pytorch.py             # Apply trained model to new datasets
+│   ├── unet\_model\_pytorch.py                 # UNet1D architecture
+│   ├── utils.py                              # Dataloader, losses, helpers
+│   ├── environment.yml                       # Conda environment file
+│   └── README.md                             # Deep learning documentation
+
+├── funcs/                                    # MATLAB helper scripts
+│   ├── demods/                               # Demodulation functions
+│   ├── mods/                                 # Modulation functions
+│   ├── plots/                                # Signal plotting functions
+│   ├── bitsToVideoFrames.m, loadDatasetSignals.m, etc.
 │
-|── DatasetDemodulationVisualization_GUI_MATLAB/  # Main directory for demodulation and visualization GUIs
-|   |── DemodulateDatasets.m                      # Main script: selects dataset folder and modulation type
-|   |── DemodulationGUI.m                         # Core demodulation script: extracts bit sequences from modulated signals
-|   |── DemodulationOrVisualizationGUI.m          # GUI to choose between demodulation or signal visualization
-|   |── SelectSignalsGUI.m                        # GUI for selecting specific signals within the dataset for processing
-|   |── VisualizeSignalsGUI.m                     # GUI for visualizing signals (waveforms, spectrograms, constellations)
-|
-│── unet/
-|   │── dataset_utils/                            # Helper functions for dataset management
-|   │── notebook/                                 # Jupyter Notebooks for training analysis
-|   │── outputs/                                  # Directory for saving training logs and results
-|   │── reference_models/                         # Pretrained models (handled via Git LFS)
-|   │── rfcutils/                                 # Additional utilities for model evaluation
-|   │── src/                                      # Source code for model training and inference
-|   │── README.md                                 # Documentation for this module
-|   │── rfsionna_env.yml                          # Environment file for Sionna-based experiments
-|   │── rftorch_env.yml                           # Environment file for PyTorch-based experiments
-|   │── sampletest_evaluationscript.py            # Script to evaluate trained models on test datasets
-|   │── sampletest_generatetestmixtures.sh        # Shell script to generate test mixtures
-|   │── sampletest_testmixture_generator.py       # Script to generate test datasets
-|   │── sampletest_tf_unet_inference.py           # TensorFlow-based U-Net inference script
-|   │── sampletest_torch_wavenet_inference.py     # PyTorch-based WaveNet inference script
-|   │── sampletrain_gendataset_script.sh          # Shell script for generating training datasets
-|   │── supervised_config.yml                     # Configuration file for training parameters
-|   │── train_torchwavenet.py                     # PyTorch training script for WaveNet
-|   │── train_unet_model_pytroch_2_mem.py         # Optimized PyTorch training script for UNet1D
-|   │── unet_model_pytorch_2.py                   # UNet1D model implementation
-│
-|── funcs/
-│   |── demods/                                   # Functions for demodulation
-│   |── mods/                                     # Functions for modulation
-│   |── plots/                                    # Functions for signal visualization
-│   |── bitsToVideoFrames.m                       # Converts binary bit sequences into video frames
-│   |── cck_chips.m                               # Implements the CCK (Complementary Code Keying) chip sequences
-│   |── loadDatasetSignals.m                      # Loads signal data from an HDF5 dataset
-│   |── processVideo.m                            # Processes video files for signal encoding
-|
-└── README.md                                     # General documentation (this file)
+└── README.md                                 # This file (project-wide overview)
+
 ```
 
 ---
 
-## **1. Wireless Signal Generation (MATLAB)**
-The **GUI_MATLAB** directory contains a **MATLAB-based graphical user interface (GUI)** for generating synthetic wireless communication signals.
+## **1. Wireless Signal Generation (MATLAB GUI)**
+Located in `DatasetGeneration_GUI_MATLAB/`, this component enables **interactive generation of RF signals** with:
+- Modulation options: **802.11ax/ac, DSSS, Bluetooth, 5G**
+- Impairments: **AWGN, phase noise, IQ imbalance, nonlinearities**
+- Custom video sources
+- Output in **HDF5 format** with metadata and bitstreams
 
-### **Features**
-- Supports **multiple wireless communication standards**: WiFi (802.11ax, 802.11ac, Non-HT), Bluetooth, DSSS, and 5G.
-- Allows **customizable signal impairments** such as **AWGN, IQ imbalance, phase noise, and nonlinear distortions**.
-- Integrates **video-based signal encoding**, enabling users to generate signals from video content.
-- Stores datasets in **HDF5 format** for seamless integration with deep learning models.
-
-### **How to Use**
-Run the following command in MATLAB:
+Launch via:
 ```matlab
 DatasetGeneration
 ```
-This will launch the GUI for configuring signal generation parameters.
 
-For more details, refer to **GUI_MATLAB/README.md**.
-
----
-
-## **2. Dataset Visualization (Python Notebooks)**
-The **dataset_visualization** directory contains Python-based **Jupyter Notebooks** for analyzing and exploring the generated wireless signal datasets.
-
-### **Features**
-- Loads datasets stored in **HDF5 format**.
-- Provides interactive **modulation selection** and **signal analysis** tools.
-- Visualizes:
-  - **Time-domain waveforms** of wireless signals.
-  - **Spectrograms** to analyze frequency content.
-  - **Constellation diagrams** for modulation analysis.
-- Supports **single-signal analysis** and **interference visualization**.
-
-### **How to Use**
-1. Install dependencies:
-   ```bash
-   pip install numpy matplotlib h5py torch ipywidgets
-   ```
-2. Run the Jupyter Notebook:
-   ```bash
-   jupyter notebook dataset_visualization.ipynb
-   ```
-For more details, refer to **dataset_visualization/README.md**.
+See `DatasetGeneration_GUI_MATLAB/README.md` for details.
 
 ---
 
-## **3. Advanced Signal Visualization and Demodulation (MATLAB)**  
-The **DatasetDemodulationVisualization_GUI_MATLAB** directory contains **MATLAB tools** for **advanced demodulation, visualization, and signal analysis**. These tools allow for a deeper inspection of modulated signals, impairments, and recovery performance.
+## **2. Interference Dataset Creation (Python)**
 
----
+The `InterferenceDatasetGeneration/` module includes scripts to **combine clean and interfering signals** using variable attenuation levels.
 
-## **Features**
-- **Demodulation Analysis**:
-  - Supports **WiFi (802.11ax, 802.11ac, Non-HT), DSSS, Bluetooth, and 5G** signals.
-  - Extracts transmitted **bit sequences** from modulated signals.
-  - Evaluates **demodulation performance** in the presence of interference.
-  
-- **Visualization Tools**:
-  - **Time-Domain Signal Waveforms** to inspect **modulation and impairments**.
-  - **Spectrograms** to analyze **frequency content over time**.
-  - **Constellation Diagrams** to visualize **modulation accuracy**.
-  - **Power Spectral Density (PSD) Plots** to evaluate **signal bandwidth**.
+* Inputs: `clean/`, `interfering/` `.h5` datasets
+* Output: multiple `interference_<source>_<atten>.h5` versions
+* Copies matching `.json`, `.mat`, and `bits_*.h5` files
 
-- **Dataset Inspection and Debugging**:
-  - Loads and visualizes signals from **HDF5 datasets**.
-  - Compares original vs. interfered signals for **quality assessment**.
-  - Supports **video-based signal encoding analysis**.
+Run via:
 
----
-
-## **How to Use**
-Launch the main visualization and demodulation GUI:
-   ```matlab
-   DatasetDemodulationVisualization
-   ```
-   - This will open a MATLAB **Graphical User Interface (GUI)** where you can **load datasets**, **demodulate signals**, and **generate visualizations**.
-
-
-For more details, refer to **DatasetDemodulationVisualization_GUI_MATLAB/README.md**.
-
----
-
-## **4. UNet1D Model for Signal Recovery (PyTorch)**
-The **unet** directory contains a **deep learning model (UNet1D)** implemented in PyTorch for **wireless signal recovery**.
-
-### **Features**
-- **1D U-Net architecture** optimized for wireless signal processing.
-- Designed to **separate signals of interest (SoI) from interference**.
-- Uses **skip connections** and **multi-scale feature extraction** for better reconstruction.
-- Supports **custom training on HDF5 datasets**.
-
-### **Training the Model**
-1. Install dependencies:
-   ```bash
-   pip install torch numpy matplotlib h5py json scipy
-   ```
-2. Run training:
-   ```bash
-   python train_unet_pytorch.py /path/to/dataset /path/to/output_directory
-   ```
-3. View training loss curves:
-   ```bash
-   python plot_loss.py /path/to/output_directory
-   ```
-
-### **Running Inference**
-To apply the trained model to new signals:
 ```bash
-python test_unet.py /path/to/test_dataset /path/to/saved_model
+python generate_interferences.py
 ```
 
-For more details, refer to **unet/README.md**.
+Details in `InterferenceDatasetGeneration/README.md`.
 
 ---
 
-## **Dataset Availability**
-- The datasets used in this project **are not stored in this repository** due to storage limitations.
-- A set of preprocessed datasets can be accessed through the following link:  
-  **[Google Drive Link]** () *There is no dataset link yet*
-- Users can generate new datasets using the **MATLAB GUI**.
+## **3. Dataset Visualization and Demodulation**
+
+### **MATLAB GUIs**
+
+The `DatasetDemodulationVisualization_GUI_MATLAB/` folder includes:
+
+* GUIs for **visualizing** and **demodulating** signals
+* Supports constellation diagrams, PSDs, spectrograms
+* Select individual signals for in-depth inspection
+
+Launch with:
+
+```matlab
+DemodulateDatasets
+```
+
+### **Python Notebook**
+
+Located in `DatasetVisualization_Python/`, run:
+
+```bash
+jupyter notebook Dataset_Visualization.ipynb
+```
+
+Explore:
+
+* Time-domain signals
+* Frequency content (spectrograms)
+* Constellation diagrams
+* Compare clean vs. interfered signals
 
 ---
 
-## **Support and Contributions**
-For issues, questions, or contributions:
-- Open an **issue** in this repository.
-- Submit a **pull request** with improvements.
-- Contact the maintainers for collaboration.
+## **4. Deep Learning for Signal Recovery (PyTorch)**
+
+The `unet_model/` directory implements a **1D U-Net** for RF signal denoising.
+
+* Handles both **classic and denoising autoencoder** training
+* HDF5 datasets: shape `[N, 2, L]` (I/Q channels)
+* Outputs inference results with MSE metrics
+* Visualizes training curves
+
+Train model:
+
+```bash
+python train_unet_model_pytorch_interf.py clean_dir [interf_dir] output_dir
+```
+
+Run inference:
+
+```bash
+python unet_inference_pytorch.py model.pth input_dir
+```
+
+Environment setup:
+
+```bash
+conda env create -f environment.yml
+conda activate unet_env
+```
+
+See `unet_model/README.md` for all options and examples.
+
+---
+
+## **Dependencies**
+
+* MATLAB R2021a or newer (Signal Processing Toolbox recommended)
+* Python 3.8+
+* Required packages: `torch`, `h5py`, `numpy`, `matplotlib`, `scipy`, `ipywidgets`, `jupyter`, etc.
+* Install via:
+
+```bash
+conda env create -f unet_model/environment.yml
+```
+
+---
+
+## **Datasets**
+
+Datasets are generated via the MATLAB GUI and may include:
+
+* Clean signals
+* Interference-only signals
+* Mixed (attenuated) interference signals
+* Corresponding `.json`, `.mat`, and `bits_*.h5` metadata
+
+
