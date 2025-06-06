@@ -62,7 +62,7 @@ This work supports the development of a **foundation model for wireless signal p
 Located in `DatasetGeneration_GUI_MATLAB/`, this component enables **interactive generation of RF signals** with:
 - Modulation options: **WiFi, DSSS, Bluetooth, PSK, QAM**
 - Impairments: **AWGN**
-- Custom video sources
+- Custom video sources: The signal generation uses videos stored at [VIDEOS](videos.org).
 - Output in **HDF5 format** with metadata and bitstreams
 
 Launch via:
