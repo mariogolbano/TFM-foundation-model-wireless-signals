@@ -191,14 +191,18 @@ slprj/
 codegen/
 ctf/
 work/
-vids_test
-unet
+
+/unet/
+/unet/**
+!/unet_model/
+
 # Ignore large datasets
 **/datasets/*
 !datasets/README.md 
 
 # Ignore videos for dataset generation
 **/vids/*
+**/vids_test/*
 **/videos/*
 
 # Ignore large or temporal files
