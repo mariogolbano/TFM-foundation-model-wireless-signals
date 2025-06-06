@@ -60,8 +60,8 @@ This work supports the development of a **foundation model for wireless signal p
 
 ## **1. Wireless Signal Generation (MATLAB GUI)**
 Located in `DatasetGeneration_GUI_MATLAB/`, this component enables **interactive generation of RF signals** with:
-- Modulation options: **802.11ax/ac, DSSS, Bluetooth, 5G**
-- Impairments: **AWGN, phase noise, IQ imbalance, nonlinearities**
+- Modulation options: **WiFi, DSSS, Bluetooth, PSK, QAM**
+- Impairments: **AWGN**
 - Custom video sources
 - Output in **HDF5 format** with metadata and bitstreams
 
