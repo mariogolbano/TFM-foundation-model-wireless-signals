@@ -5,7 +5,6 @@ channels:
   - https://repo.anaconda.com/pkgs/r
 dependencies:
   - _libgcc_mutex=0.1=main
-  - _openmp_mutex=5.1=1_gnu
   - blas=1.0=mkl
   - brotli-python=1.0.9=py310h6a678d5_9
   - bzip2=1.0.8=h5eee18b_6

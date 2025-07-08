@@ -57,7 +57,7 @@ function [signal] = WifiNonHT_mod(in_bits, modParams)
     signal.oversamplingFactor = oversampling;
     signal.cbw = 20e6;
     signal.dataRate = dsssCfg.DataRate;
-    switch dsssCfg.dataRate
+    switch dsssCfg.DataRate
         case '1Mbps'
             signal.modulation = 'DBPSK';
         case '2Mbps'

@@ -205,6 +205,8 @@ work/
 **/vids_test/*
 **/videos/*
 
+*.mp4
+
 # Ignore large or temporal files
 *.hdf5
 *.csv

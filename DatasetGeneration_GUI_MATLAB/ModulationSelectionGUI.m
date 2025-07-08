@@ -11,8 +11,7 @@ function ModulationSelectionGUI(videoBitsMatrix)
         'Position', [50 450 500 30]);
 
     % **Lista de Modulaciones Disponibles**
-    %*************** hay que añadir 5g si eso ****************************%
-    modulations = {'PSK', 'QAM', 'OFDM', 'DSSS', 'WifiVHT', 'WifiNonHT', 'WifiHESU', 'Bluetooth', '5G (NR)'};
+    modulations = {'PSK', 'QAM', 'OFDM', 'DSSS', 'WifiVHT', 'WifiNonHT', 'WifiHESU', 'Bluetooth'};
     
     modulationList = uilistbox(fig, ...
         'Items', modulations, ...
@@ -232,16 +231,6 @@ function ModulationSelectionGUI(videoBitsMatrix)
                 uilabel(modFig, 'Text', 'Noise - SNR (dB):', 'Position', [80 115 200 20]);
                 bt_noise = uieditfield(modFig, 'numeric', 'Position', [245 115 70 20], 'Value', 50);
 
-            case '5G'
-                modFig = uifigure('Name', sprintf('%s Parameters', modulationType), 'Position', [200 200 400 200]);
-                uilabel(modFig, 'Text', sprintf('Configure parameters for %s:', modulationType), ...
-                'FontSize', 12, 'FontWeight', 'bold', 'Position', [50 240 300 170]);
-
-                uilabel(modFig, 'Text', 'Noise - SNR (dB):', 'Position', [80 135 200 20]);
-                noise = uieditfield(modFig, 'numeric', 'Position', [245 135 70 20], 'Value', 50);
-
-                uilabel(modFig, 'Text', 'Chip Rate (MHz):', 'Position', [50 100 200 30]);
-                chipRate = uieditfield(modFig, 'numeric', 'Position', [250 100 100 30], 'Value', 11);
         end
 
         % Botón para Guardar Configuración

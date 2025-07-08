@@ -1,7 +1,7 @@
 function [signal] = QAM_mod(inputBits, modParams)
 
-    M = modParams.modOrder;  % Modulation order, e.g., 4, 16, 64, 256...
-    symbolRate = modParams.symbolRate;  % Symbol rate (Hz)
+    M = str2num(modParams.modOrder);  % Modulation order, e.g., 4, 16, 64, 256...
+    symbolRate = modParams.symRate;  % Symbol rate (Hz)
     bitsPerSymbol = log2(M);
 
     % Calcular cuántos bits son necesarios y hacer padding si es necesario
