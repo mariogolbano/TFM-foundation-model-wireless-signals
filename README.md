@@ -62,7 +62,7 @@ This work supports the development of a **foundation model for wireless signal p
 Located in `DatasetGeneration_GUI_MATLAB/`, this component enables **interactive generation of RF signals** with:
 - Modulation options: **WiFi, DSSS, Bluetooth, PSK, QAM**
 - Impairments: **AWGN**
-- Custom video sources
+- Custom video sources: The signal generation uses videos stored at **[Zenodo](https://zenodo.org/records/15741102?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImZmZjdkNTg0LTdjMjQtNDI2OC04Yzk0LTIwMmYwNWRjZjEzNiIsImRhdGEiOnt9LCJyYW5kb20iOiJjMTVjYTBiMzI2Njk5OWQ3NGVhN2ViOGRhZWEwNWIzMyJ9.ll6oiTY2N1ErL7FNhQ4_J_Gd5S5_3Z1nVGOUf-sgsmDcy_3GEC_uA1DWPNlzfv2x9VttBOMLUSNyUQk88Q7UHQ)**.
 - Output in **HDF5 format** with metadata and bitstreams
 
 Launch via:
@@ -179,4 +179,5 @@ Datasets are generated via the MATLAB GUI and may include:
 * Mixed (attenuated) interference signals
 * Corresponding `.json`, `.mat`, and `bits_*.h5` metadata
 
+In this link an example of a dataset generated using this framework can be found. This dataset was used for the example described in my Master's Thesis: A data-driven framework for Wireless Communications: **[Dataset Example in Zenodo](https://zenodo.org/records/15740852?token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6IjhiY2M1YWQ1LWI4OTktNGRjNC04MzY5LTFhMDM2MmMyYmJlMCIsImRhdGEiOnt9LCJyYW5kb20iOiI4MTA4ZTdmNzlmNmY5NTkwMDNjYTYzNDc3YjIwYjQ4NCJ9.E6jWzyWlf57ixQSE9AK9fKkOG-yvnF8n65L5GCZXrv7T8JHnpEZL2-EWz3gljZGZZywYSoIYEnsqk-UczwzQpw)**
 
