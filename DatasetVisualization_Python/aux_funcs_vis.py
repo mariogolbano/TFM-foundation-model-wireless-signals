@@ -1,4 +1,4 @@
-from os import scandir, getcwd
+import os
 import json
 import h5py
 import numpy as np
@@ -10,11 +10,11 @@ import ipywidgets as widgets
 from IPython.display import display, clear_output
 
 # List objects from current folder into a list
-def ls(ruta = getcwd()):
-    return [arch.name for arch in scandir(ruta) if arch.is_file()]
+def ls(ruta = os.getcwd()):
+    return [arch.name for arch in os.scandir(ruta) if arch.is_file()]
 
 # List the modulations available in the datasets from current folder
-def get_mods(ruta = getcwd()):
+def get_mods(ruta = os.getcwd()):
     list = ls(ruta)
     mods = []
     for object in list:
@@ -28,10 +28,12 @@ def load_metadata(json_file):
     return metadata
 
 # Print available modulations and main metadata about them in current folder
-def print_mods(ruta = getcwd()):
+def print_mods(ruta = os.getcwd()):
     mods = get_mods(ruta)
     for mod in mods:
-        metadata = load_metadata(mod + '.json')
+        json_file = os.path.join(ruta, mod + '.json')
+
+        metadata = load_metadata(json_file)
 
         print(mod, ':')
         type_mod = metadata['type']
